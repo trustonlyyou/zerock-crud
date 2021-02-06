@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost:3306/book_ex?serverTimezone=UTC"/>
+		<property name="username" value="root"/>
+		<property name="password" value="wjd695295"/>
+		<property name="minimumIdle" value="50"/>
+		<property name="maximumPoolSize" value="50"/>
+		<property name="maxLifetime" value="3600000"/>
+		<property name="connectionTimeout" value="60000"/>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="mapperLocations">
+			<list>
+<!--				<value>/WEB-INF/database/boardMapper.xml</value>-->
+<!--				<value>/WEB-INF/database/member.xml</value>-->
+				<value>/WEB-INF/database/mapper/boardMapper.xml</value>
+			</list>
+		</property>
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!--	sqlSession 즉, 인터페이스를 안쓸때 	-->
+	<bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+	</bean>
+
+	<!--	요즘은 위에 거를 주석 처리하고 interface 만 쓴다. 	-->
+<!--	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+<!--		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
+<!--		<property name="basePackage" value="com.spring.mvc.dao"/>-->
+<!--	</bean>-->
+</beans>
